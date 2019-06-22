@@ -71,19 +71,6 @@ setup() {
     [ "$output" = "" ]
 }
 
-@test "CHECK: check_python_module(): module exists" {
-    run check_python_module "sys"
-    [ "$status" -eq 0 ]
-    [ "$output" = "" ]
-}
-
-@test "CHECK: check_python_module(): module doesn't exist" {
-    module="tototatatiti"
-    run check_python_module "$module"
-    [ "$status" -eq 1 ]
-    [ "${lines[2]}" = "ModuleNotFoundError: No module named '"$module"'" ]
-}
-
 @test "CHECK: generate_checksum()" {
     run generate_checksum '{"fake": "sexybody"}'
     [ "$status" -eq 0 ]

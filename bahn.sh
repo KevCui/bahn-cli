@@ -56,7 +56,6 @@ set_var() {
     check_command "curl" "$_CURL"
     check_command "jq" "$_JQ"
     check_command "python3" "$_PYTHON"
-    check_python_module "hashlib"
 }
 
 check_command() {
@@ -66,11 +65,6 @@ check_command() {
     if [[ ! "$2" ]]; then
         echo "Command \"$1\" not found!" && exit 1
     fi
-}
-
-check_python_module() {
-    # Check python module $1
-    $_PYTHON -c "import $1" || exit $?
 }
 
 check_var() {
