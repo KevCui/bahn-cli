@@ -64,7 +64,7 @@ setup() {
     [ "${lines[0]}" = "-a <arr_station> is missing!"$(usage) ]
 }
 
-@test "CHECK: check_var(): no \$_TIRP_DATE" {
+@test "CHECK: check_var(): no \$_TRIP_DATE" {
     unset _TRIP_DATE
     run check_var
     [ "$status" -eq 0 ]
