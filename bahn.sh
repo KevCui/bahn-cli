@@ -112,11 +112,10 @@ find_trip() {
     reqBody='{"auth":{"aid":"n91dB8Z77MLdoR0K","type":"AID"},"client":{"id":"DB","name":"DB Navigator","type":"AND","v":19060000},"ext":"DB.R19.04.a","formatted":false,"lang":"eng","svcReqL":[{"cfg":{"polyEnc":"GPA","rtMode":"HYBRID"},"meth":"TripSearch","req":{"outDate":"'${3%%:*}'","outTime":"'${3#*:}'00","arrLocL":['$2'],"depLocL":['$1'],"getPasslist":true,"getPolyline":true,"jnyFltrL":[{"mode":"BIT","type":"PROD","value":"11111111111111"}],"trfReq":{"cType":"PK","jnyCl":2,"tvlrProf":[{"type":"E"}]}}}],"ver":"1.15"}'
     call_api "$reqBody" \
         | $_JQ -r '.svcResL | .[].res.outConL | .[] | "\(if .dep.dTimeR == null then .dep.dTimeS[-6:-2] else .dep.dTimeR[-6:-2] end)-\(if .arr.aTimeR == null then .arr.aTimeS[-6:-2] else .arr.aTimeR[-6:-2] end)+\(.dur[:2])H\(.dur[2:-2])+\(.secL | .[] | .jny.ctxRecon | select(.!=null))"' \
-        | sed -E 's/null//g' \
         | awk -F"(@O=|@L=|@a=|T$A|128@)" '{printf "%s%s-%s%s\n", $1, $3, $7, $10}' \
-        | sed -E 's/\$\$1.*//;s/\$/+/g' \
+        | sed -E 's/\$\$1.*//;s/\$/+/g;s/null//g' \
         | awk -F"+" '{printf "%s+%s|%s+%s-%s+%s\n", $1, $2, $3, substr($4,9,12), substr($5,9,12), $6}' \
-        | awk -F"|" '{if ($1!=prev) printf "%s+%s\n", $1, $2; else printf "++%s\n", $2; prev=$1}' \
+        | awk -F"|" '{if ($1==prev) printf "++%s\n", $2; else printf "%s+%s\n", $1, $2; prev=$1}' \
         | column -t -s '+'
 }
 
