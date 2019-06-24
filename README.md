@@ -1,5 +1,5 @@
-db-cli
-======
+bahn-cli
+========
 
 CLI tool for searching train timetable from Deutsche Bahn, aka [DB](https://www.bahn.de/p/view/index.shtml).
 
