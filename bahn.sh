@@ -111,7 +111,7 @@ find_trip() {
     # $3: trip date:time
     reqBody='{"auth":{"aid":"n91dB8Z77MLdoR0K","type":"AID"},"client":{"id":"DB","name":"DB Navigator","type":"AND","v":19060000},"ext":"DB.R19.04.a","formatted":false,"lang":"eng","svcReqL":[{"cfg":{"polyEnc":"GPA","rtMode":"HYBRID"},"meth":"TripSearch","req":{"outDate":"'${3%%:*}'","outTime":"'${3#*:}'00","arrLocL":['$2'],"depLocL":['$1'],"getPasslist":true,"getPolyline":true,"jnyFltrL":[{"mode":"BIT","type":"PROD","value":"11111111111111"}],"trfReq":{"cType":"PK","jnyCl":2,"tvlrProf":[{"type":"E"}]}}}],"ver":"1.15"}'
     call_api "$reqBody" \
-        | $_JQ -r '.svcResL | .[].res.outConL | .[] | "\(if .dep.dTimeR == null then .dep.dTimeS[-6:-2] else .dep.dTimeR[-6:-2] end)-\(if .arr.aTimeR == null then .arr.aTimeS[-6:-2] else .arr.aTimeR[-6:-2] end)+\(.dur[:2])H\(.dur[2:-2])+\(.dep.dPlatfS)+\(.secL | .[] | .jny.ctxRecon | select(.!=null))"' \
+        | $_JQ -r '.svcResL | .[].res.outConL | .[] | "\(if .dep.dTimeR == null then .dep.dTimeS[-6:-2] else .dep.dTimeR[-6:-2] end)-\(if .arr.aTimeR == null then .arr.aTimeS[-6:-2] else .arr.aTimeR[-6:-2] end)+\(.dur[:2])H\(.dur[2:-2])+\(if .dep.dPlatfS == null then " " else .dep.dPlatfS end)+\(.secL | .[] | .jny.ctxRecon | select(.!=null))"' \
         | awk -F"(@O=|@L=|@a=|T$A|128@)" '{printf "%s%s-%s%s\n", $1, $3, $7, $10}' \
         | sed -E 's/\$\$1.*//;s/\$/+/g;s/null//g' \
         | awk -F"+" '{printf "%s+%s+%s|%s+%s-%s+%s\n", $1, $2, $3, $4, substr($5,9,12), substr($6,9,12), $7}' \

@@ -92,7 +92,7 @@ setup() {
     }
     run find_trip '$_DEPARTURE_STATION' '$_ARRIVAL_STATION' '$_TRIP_DATE'
     [ "$status" -eq 0 ]
-    [ "${lines[1]}" = "2151-2355  02H04  13  Hamburg Hbf-Berlin Hbf (tief)  2151-2355  ICE  905" ]
+    [ "${lines[1]}" = "2151-2355  02H04      Hamburg Hbf-Berlin Hbf (tief)  2151-2355  ICE  905" ]
     [ "${lines[3]}" = "2157-0230  04H33  8   Hamburg Hbf-Uelzen             2157-2256  ME 82141" ]
     [ "${lines[4]}" = "                      Uelzen-Magdeburg-Neustadt      2302-0041  RE  4697" ]
     [ "${lines[5]}" = "                      Magdeburg-Neustadt-Berlin Hbf  0046-0230  RE  3143" ]
