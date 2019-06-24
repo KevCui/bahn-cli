@@ -115,8 +115,8 @@ find_trip() {
         | awk -F"(@O=|@L=|@a=|T$A|128@)" '{printf "%s%s-%s%s\n", $1, $3, $7, $10}' \
         | sed -E 's/\$\$1.*//;s/\$/+/g;s/null//g' \
         | awk -F"+" '{printf "%s+%s+%s|%s+%s-%s+%s\n", $1, $2, $3, $4, substr($5,9,12), substr($6,9,12), $7}' \
-        | awk -F"|" '{if ($1==prev) printf "+++%s\n", $2; else printf "\n%s+%s\n", $1, $2; prev=$1}' \
-        | column -t -L -s '+'
+        | awk -F"|" '{if ($1==prev) printf " + + +%s\n", $2; else printf " +\n%s+%s\n", $1, $2; prev=$1}' \
+        | column -t -s '+'
 }
 
 main() {
