@@ -19,6 +19,9 @@
 #/   \e[32m- Search trains from `hamburg` to `berlin` at `13:30` on `20190730`:\e[0m
 #/     ~$ ./bahn.sh -d 'hamburg hbf' -a 'berlin hbf' \e[33m-t '20190730:1330'\e[0m
 
+set -e
+set -u
+
 usage() {
     # Display usage message
     printf "%b\n" "$(grep '^#/' "$0" | cut -c4-)" && exit 0
@@ -62,20 +65,20 @@ check_command() {
     # Check command if it exists
     # $1: name
     # $2: command
-    if [[ ! "$2" ]]; then
+    if [[ -z "${2:-}" ]]; then
         echo "Command \"$1\" not found!" && exit 1
     fi
 }
 
 check_var() {
     # Check _DEPARTURE_STATION, _ARRIVAL_STATION
-    if [[ -z "$_DEPARTURE_STATION" ]]; then
+    if [[ -z "${_DEPARTURE_STATION:-}" ]]; then
         echo '-d <dep_station> is missing!' && usage
     fi
-    if [[ -z "$_ARRIVAL_STATION" ]]; then
+    if [[ -z "${_ARRIVAL_STATION:-}" ]]; then
         echo '-a <arr_station> is missing!' && usage
     fi
-    if [[ -z "$_TRIP_DATE" ]]; then
+    if [[ -z "${_TRIP_DATE:-}" ]]; then
         _TRIP_DATE=$(date +%Y%m%d:%H%M)
     fi
 }
@@ -112,8 +115,8 @@ find_trip() {
     reqBody='{"auth":{"aid":"n91dB8Z77MLdoR0K","type":"AID"},"client":{"id":"DB","name":"DB Navigator","type":"AND","v":19060000},"ext":"DB.R19.04.a","formatted":false,"lang":"eng","svcReqL":[{"cfg":{"polyEnc":"GPA","rtMode":"HYBRID"},"meth":"TripSearch","req":{"outDate":"'${3%%:*}'","outTime":"'${3#*:}'00","arrLocL":['$2'],"depLocL":['$1'],"getPasslist":true,"getPolyline":true,"jnyFltrL":[{"mode":"BIT","type":"PROD","value":"11111111111111"}],"trfReq":{"cType":"PK","jnyCl":2,"tvlrProf":[{"type":"E"}]}}}],"ver":"1.15"}'
     call_api "$reqBody" \
         | $_JQ -r '.svcResL[].res.outConL[] | . as $trip | .secL[] | "\(if $trip.dep.dTimeR == null then $trip.dep.dTimeS[-6:-2] else $trip.dep.dTimeR[-6:-2] end)-\(if $trip.arr.aTimeR == null then $trip.arr.aTimeS[-6:-2] else $trip.arr.aTimeR[-6:-2] end)+\($trip.dur[:2])H\($trip.dur[2:-2])+\(if .dep.dPlatfS == null then " " else .dep.dPlatfS end)+\(.jny.ctxRecon | select(.!=null))"' \
-        | awk -F"(@O=|@L=|@a=|T$A|128@)" '{printf "%s%s-%s%s\n", $1, $3, $7, $10}' \
-        | sed -E 's/\$\$1.*//;s/\$/+/g;s/null//g' \
+        | awk -F'(@O=|@L=|@a=|T\\$A|128@|\\$\\$1)' '{printf "%s%s - %s%s\n", $1, $3, $7, $10}' \
+        | sed -E 's/\$/+/g;s/null//g' \
         | awk -F"+" '{printf "%s+%s|%s+%s+%s-%s+%s\n", $1, $2, $3, $4, substr($5,9,12), substr($6,9,12), $7}' \
         | awk -F"|" '{if ($1==prev) printf " + +%s\n", $2; else printf " +\n%s+%s\n", $1, $2; prev=$1}' \
         | column -t -s '+'

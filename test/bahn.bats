@@ -4,6 +4,8 @@
 #   ~$ bats test/bahn.bats
 #
 
+export BATS_TEST_SKIPPED=
+
 setup() {
     _SCRIPT="./bahn.sh"
     _DEPARTURE_STATION="toto"
@@ -19,17 +21,15 @@ setup() {
 }
 
 @test "CHECK: set_var(): --help" {
-    usage=$(run usage)
     run set_var --help
     [ "$status" -eq 0 ]
-    [ "$output" = "$usage" ]
+    [ "$output" = "$(usage)" ]
 }
 
 @test "CHECK: set_var(): -h" {
-    usage=$(run usage)
     run set_var -h
     [ "$status" -eq 0 ]
-    [ "$output" = "$usage" ]
+    [ "$output" = "$(usage)" ]
 }
 
 @test "CHECK: check_command(): command found" {
@@ -92,13 +92,13 @@ setup() {
     }
     run find_trip '$_DEPARTURE_STATION' '$_ARRIVAL_STATION' '$_TRIP_DATE'
     [ "$status" -eq 0 ]
-    [ "${lines[1]}" = "2151-2355  02H04       Hamburg Hbf-Berlin Hbf (tief)  2151-2355  ICE  905" ]
-    [ "${lines[3]}" = "2157-0230  04H33  8    Hamburg Hbf-Uelzen             2157-2256  ME 82141" ]
-    [ "${lines[4]}" = "                  304  Uelzen-Magdeburg-Neustadt      2302-0041  RE  4697" ]
-    [ "${lines[5]}" = "                  3    Magdeburg-Neustadt-Berlin Hbf  0046-0230  RE  3143" ]
-    [ "${lines[7]}" = "2234-0536  07H02  11   Hamburg Hbf-Hannover Hbf       2234-0056  ME 81643" ]
-    [ "${lines[8]}" = "                  9    Hannover Hbf-Berlin Hbf        0240-0536  ICE  949" ]
-    [ "${lines[10]}" = "2246-0536  06H50  14   Hamburg Hbf-Bremen Hbf         2246-2341  IC  2021" ]
-    [ "${lines[11]}" = "                  5    Bremen Hbf-Hannover Hbf        0013-0140  RE  4445" ]
-    [ "${lines[12]}" = "                  9    Hannover Hbf-Berlin Hbf        0240-0536  ICE  949" ]
+    [ "${lines[1]}" = "2151-2355  02H04       Hamburg Hbf - Berlin Hbf (tief)  2151-2355  ICE  905" ]
+    [ "${lines[3]}" = "2157-0230  04H33  8    Hamburg Hbf - Uelzen             2157-2256  ME 82141" ]
+    [ "${lines[4]}" = "                  304  Uelzen - Magdeburg-Neustadt      2302-0041  RE  4697" ]
+    [ "${lines[5]}" = "                  3    Magdeburg-Neustadt - Berlin Hbf  0046-0230  RE  3143" ]
+    [ "${lines[7]}" = "2234-0536  07H02  11   Hamburg Hbf - Hannover Hbf       2234-0056  ME 81643" ]
+    [ "${lines[8]}" = "                  9    Hannover Hbf - Berlin Hbf        0240-0536  ICE  949" ]
+    [ "${lines[10]}" = "2246-0536  06H50  14   Hamburg Hbf - Bremen Hbf         2246-2341  IC  2021" ]
+    [ "${lines[11]}" = "                  5    Bremen Hbf - Hannover Hbf        0013-0140  RE  4445" ]
+    [ "${lines[12]}" = "                  9    Hannover Hbf - Berlin Hbf        0240-0536  ICE  949" ]
 }
