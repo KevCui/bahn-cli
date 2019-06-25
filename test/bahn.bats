@@ -4,7 +4,7 @@
 #   ~$ bats test/bahn.bats
 #
 
-export BATS_TEST_SKIPPED=
+BATS_TEST_SKIPPED=
 
 setup() {
     _SCRIPT="./bahn.sh"
