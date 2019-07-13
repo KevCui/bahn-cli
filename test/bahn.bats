@@ -20,28 +20,10 @@ setup() {
     source $_SCRIPT
 }
 
-@test "CHECK: set_var(): --help" {
-    run set_var --help
-    [ "$status" -eq 0 ]
-    [ "$output" = "$(usage)" ]
-}
-
-@test "CHECK: set_var(): -h" {
-    run set_var -h
-    [ "$status" -eq 0 ]
-    [ "$output" = "$(usage)" ]
-}
-
-@test "CHECK: check_command(): command found" {
-    run check_command "bats" $(command -v bats)
-    [ "$status" -eq 0 ]
-    [ "$output" = "" ]
-}
-
-@test "CHECK: check_command(): command not found" {
-    run check_command "notacommand" $(command -v itisnotacommand)
+@test "CHECK: command_not_found()" {
+    run command_not_found "bats"
     [ "$status" -eq 1 ]
-    [ "$output" = "Command \"notacommand\" not found!" ]
+    [ "$output" = "[31mbats[0m command not found!" ]
 }
 
 @test "CHECK: check_var(): all mandatory variables are set" {
