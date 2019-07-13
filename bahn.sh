@@ -53,21 +53,15 @@ set_var() {
 
     _URL="https://reiseauskunft.bahn.de/bin/mgate.exe?checksum="
 
-    _CURL=$(command -v curl)
-    _JQ=$(command -v jq)
-    _PYTHON=$(command -v python3)
-    check_command "curl" "$_CURL"
-    check_command "jq" "$_JQ"
-    check_command "python3" "$_PYTHON"
+    _CURL=$(command -v curl) || command_not_found "curl"
+    _JQ=$(command -v jq) || command_not_found "jq"
+    _PYTHON=$(command -v python3) || command_not_found "python"
 }
 
-check_command() {
-    # Check command if it exists
-    # $1: name
-    # $2: command
-    if [[ -z "${2:-}" ]]; then
-        echo "Command \"$1\" not found!" && exit 1
-    fi
+command_not_found() {
+    # Show command not found message
+    # $1: command name
+    printf "%b\n" '\033[31m'"$1"'\033[0m command not found!' && exit 1
 }
 
 check_var() {
