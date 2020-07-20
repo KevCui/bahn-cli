@@ -12,8 +12,10 @@ jobs:
 
     steps:
       - name: Setup bats
-      - run: docker run -it bats/bats:latest --version
+        run: docker run -it bats/bats:latest --version
+
       - name: Checkout code
-      - uses: actions/checkout@v2
+        uses: actions/checkout@v2
+
       - name: Run test
-      - run: cd "$GITHUB_WORKSPACE" && bats test/bahn.bats
+        run: cd "$GITHUB_WORKSPACE" && bats test/bahn.bats
