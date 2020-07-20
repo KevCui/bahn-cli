@@ -11,11 +11,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Setup bats
-        run: docker run -it bats/bats:latest --version
-
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Setup bats
+        uses: actions/setup-node@v1
+        run: npm install -g bats
 
       - name: Run test
         run: cd "$GITHUB_WORKSPACE" && bats test/bahn.bats
