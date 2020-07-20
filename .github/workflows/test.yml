@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Setup bats
+    - run: docker run -it bats/bats:latest --version
+
+    - name: Checkout code
+    - uses: actions/checkout@v2
+
+    - name: Run test
+    - run: cd "$GITHUB_WORKSPACE" && bats test/bahn.bats
