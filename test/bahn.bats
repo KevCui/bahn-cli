@@ -2,7 +2,6 @@
 #
 # How to run:
 #   ~$ bats test/bahn.bats
-#
 
 BATS_TEST_SKIPPED=
 
