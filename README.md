@@ -1,5 +1,4 @@
-bahn-cli
-========
+# bahn-cli ![CI](https://github.com/KevCui/bahn-cli/workflows/CI/badge.svg)
 
 CLI tool for searching train timetable from Deutsche Bahn, aka [DB](https://www.bahn.de/p/view/index.shtml).
 
